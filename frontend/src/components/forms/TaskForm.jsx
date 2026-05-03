@@ -3,10 +3,11 @@ import Modal from '../ui/Modal';
 import api from '../../lib/api';
 
 const TaskForm = ({ isOpen, onClose, projectId, onTaskAdded, members = [] }) => {
+  const [teamUsers, setTeamUsers] = useState(members);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    assignee: members.length > 0 ? members[0]._id : '',
+    assignee: '',
     priority: 'MEDIUM',
     status: 'TODO',
     dueDate: ''
@@ -14,10 +15,26 @@ const TaskForm = ({ isOpen, onClose, projectId, onTaskAdded, members = [] }) => 
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (members.length > 0 && !formData.assignee) {
-      setFormData(prev => ({ ...prev, assignee: members[0]._id }));
+    // Fetch all users to allow admin to assign to anyone, ignoring project limits for ease
+    const fetchUsers = async () => {
+      try {
+        const res = await api.get('/users');
+        setTeamUsers(res.data.users);
+        if (!formData.assignee && res.data.users.length > 0) {
+          setFormData(prev => ({ ...prev, assignee: res.data.users[0]._id }));
+        }
+      } catch (err) {
+        // Fallback to members if fetch fails (e.g. user isn't admin or no permission)
+        setTeamUsers(members);
+        if (!formData.assignee && members.length > 0) {
+          setFormData(prev => ({ ...prev, assignee: members[0]._id }));
+        }
+      }
+    };
+    if (isOpen) {
+      fetchUsers();
     }
-  }, [members]);
+  }, [isOpen, members]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -84,9 +101,9 @@ const TaskForm = ({ isOpen, onClose, projectId, onTaskAdded, members = [] }) => 
               value={formData.assignee}
               onChange={e => setFormData({...formData, assignee: e.target.value})}
             >
-              <option value="" disabled>Select User</option>
-              {members.map(m => (
-                <option key={m._id} value={m._id}>{m.name}</option>
+              <option value="" disabled className="bg-[#0B0E14] text-slate-500">Select User</option>
+              {teamUsers.map(m => (
+                <option key={m._id} value={m._id} className="bg-[#0B0E14] text-white font-bold">{m.name}</option>
               ))}
             </select>
           </div>
@@ -108,9 +125,9 @@ const TaskForm = ({ isOpen, onClose, projectId, onTaskAdded, members = [] }) => 
               value={formData.priority}
               onChange={e => setFormData({...formData, priority: e.target.value})}
             >
-              <option value="LOW">Low</option>
-              <option value="MEDIUM">Medium</option>
-              <option value="HIGH">High</option>
+              <option value="LOW" className="bg-[#0B0E14] text-white">Low</option>
+              <option value="MEDIUM" className="bg-[#0B0E14] text-white">Medium</option>
+              <option value="HIGH" className="bg-[#0B0E14] text-white">High</option>
             </select>
           </div>
           <div>
@@ -120,9 +137,9 @@ const TaskForm = ({ isOpen, onClose, projectId, onTaskAdded, members = [] }) => 
               value={formData.status}
               onChange={e => setFormData({...formData, status: e.target.value})}
             >
-              <option value="TODO">To Do</option>
-              <option value="IN_PROGRESS">In Progress</option>
-              <option value="DONE">Done</option>
+              <option value="TODO" className="bg-[#0B0E14] text-white">To Do</option>
+              <option value="IN_PROGRESS" className="bg-[#0B0E14] text-white">In Progress</option>
+              <option value="DONE" className="bg-[#0B0E14] text-white">Done</option>
             </select>
           </div>
         </div>

@@ -44,27 +44,27 @@ const ProjectDetailsPage = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-          <div className="w-4 h-4 rounded-full" style={{ backgroundColor: project.color }} />
+        <h1 className="text-3xl font-black text-white flex items-center gap-3 tracking-tight">
+          <div className="w-4 h-4 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: project.color }} />
           {project.name}
         </h1>
-        <p className="mt-2 text-gray-500 dark:text-slate-400">{project.description}</p>
+        <p className="mt-2 text-slate-400 font-medium">{project.description}</p>
         
-        <div className="mt-4 flex flex-wrap items-center gap-2">
+        <div className="mt-6 flex flex-wrap items-center gap-2">
           {project.members.map(m => (
-            <div key={m._id} className="px-3 py-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-full text-sm font-medium">
+            <div key={m._id} className="px-3 py-1.5 bg-[#5468FF]/10 border border-[#5468FF]/30 rounded-full text-xs font-bold text-[#5468FF] tracking-widest uppercase">
               {m.name}
             </div>
           ))}
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Tasks</h2>
+      <div className="flex items-center justify-between border-t border-white/5 pt-8">
+        <h2 className="text-xl font-black text-white">Tasks</h2>
         {user?.role === 'ADMIN' && (
           <button 
             onClick={() => setIsTaskModalOpen(true)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm"
+            className="bg-[#5468FF] hover:bg-[#4353cc] text-white px-5 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-[#5468FF]/20 text-sm"
           >
             Add Task
           </button>
@@ -73,10 +73,10 @@ const ProjectDetailsPage = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {columns.map(col => (
-          <div key={col.id} className="bg-gray-50 dark:bg-slate-800/50 rounded-xl p-4 border border-gray-200 dark:border-slate-700">
-            <h3 className="font-semibold text-gray-700 dark:text-slate-300 mb-4 flex items-center justify-between">
+          <div key={col.id} className="bg-[#1A1F26]/50 backdrop-blur-xl rounded-2xl p-5 border border-white/5 shadow-xl">
+            <h3 className="font-black text-white mb-6 flex items-center justify-between tracking-wide">
               {col.title}
-              <span className="bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-slate-400 py-0.5 px-2.5 rounded-full text-xs">
+              <span className="bg-[#5468FF]/20 text-[#5468FF] py-1 px-3 rounded-full text-[10px] uppercase tracking-widest">
                 {tasks.filter(t => t.status === col.id).length}
               </span>
             </h3>

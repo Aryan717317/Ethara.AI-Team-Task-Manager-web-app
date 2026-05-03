@@ -1,14 +1,14 @@
 const Badge = ({ children, variant = 'default', className = '' }) => {
   const variants = {
-    default: 'bg-gray-100 text-gray-800 dark:bg-slate-800 dark:text-slate-300',
-    primary: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400',
-    success: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
-    warning: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
-    danger: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400',
+    default: 'bg-slate-800 text-slate-300 border border-slate-700',
+    primary: 'bg-[#5468FF]/10 text-[#5468FF] border border-[#5468FF]/30',
+    success: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30',
+    warning: 'bg-amber-500/10 text-amber-400 border border-amber-500/30',
+    danger: 'bg-rose-500/10 text-rose-400 border border-rose-500/30',
   };
 
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${variants[variant]} ${className}`}>
+    <span className={`inline-flex items-center px-2 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${variants[variant]} ${className}`}>
       {children}
     </span>
   );

@@ -18,10 +18,10 @@ const TaskCard = ({ task, onClick }) => {
   return (
     <div 
       onClick={onClick}
-      className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-gray-200 dark:border-slate-700 shadow-sm hover:shadow-md cursor-pointer transition-all"
+      className="bg-[#0B0E14] rounded-xl p-5 border border-white/5 shadow-sm hover:border-[#5468FF]/50 hover:shadow-[0_0_20px_rgba(84,104,255,0.1)] cursor-pointer transition-all"
     >
       <div className="flex justify-between items-start gap-4 mb-3">
-        <h4 className="font-semibold text-gray-900 dark:text-white line-clamp-2">
+        <h4 className="font-bold text-white line-clamp-2">
           {task.title}
         </h4>
         <Badge variant={priorityColors[task.priority] || 'default'} className="flex-shrink-0">
@@ -29,20 +29,20 @@ const TaskCard = ({ task, onClick }) => {
         </Badge>
       </div>
 
-      <p className="text-sm text-gray-500 dark:text-slate-400 line-clamp-2 mb-4">
+      <p className="text-sm text-slate-400 font-medium line-clamp-2 mb-4">
         {task.description || 'No description'}
       </p>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-gray-100 dark:border-slate-700">
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-white/5">
         <Badge variant={statusColors[task.status] || 'default'}>
           {task.status.replace('_', ' ')}
         </Badge>
 
-        <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-slate-400 font-medium">
+        <div className="flex items-center gap-3 text-[10px] uppercase tracking-widest text-slate-500 font-bold">
           {task.dueDate && (
             <div className={`flex items-center gap-1 ${new Date(task.dueDate) < new Date() && task.status !== 'DONE' ? 'text-rose-500' : ''}`}>
               <Calendar className="w-3.5 h-3.5" />
-              <span>{format(new Date(task.dueDate), 'MMM d, yyyy')}</span>
+              <span>{format(new Date(task.dueDate), 'MMM d')}</span>
             </div>
           )}
           {task.project?.name && (

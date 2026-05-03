@@ -42,8 +42,10 @@ exports.createTask = async (req, res, next) => {
     const project = await ensureProjectAccess(req.params.projectId, req.user);
     if (!project) return res.status(404).json({ success: false, message: 'Project not found or access denied' });
 
-    const isMemberAssignee = project.members.map(String).includes(body.assignee);
-    if (!isMemberAssignee) return res.status(400).json({ success: false, message: 'Assignee must be a project member' });
+    if (req.user.role !== 'ADMIN') {
+      const isMemberAssignee = project.members.map(String).includes(body.assignee);
+      if (!isMemberAssignee) return res.status(400).json({ success: false, message: 'Assignee must be a project member' });
+    }
 
     const task = await Task.create({
       ...body,
