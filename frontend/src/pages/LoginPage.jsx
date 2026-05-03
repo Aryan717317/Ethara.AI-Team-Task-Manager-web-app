@@ -31,89 +31,85 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 p-8 space-y-8 transition-all">
-        <div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900 dark:text-white">
-            <span className="bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">Taskify</span>
-          </h2>
-          <h3 className="mt-4 text-center text-xl font-medium text-gray-700 dark:text-slate-300">
-            {isRegister ? 'Create an account' : 'Sign in to your account'}
-          </h3>
+    <div className="min-h-screen flex items-center justify-center bg-[#0B0E14] py-12 px-4 sm:px-6 lg:px-8 font-sans">
+      <div className="max-w-md w-full bg-[#151921] rounded-2xl shadow-2xl border border-white/5 p-10 space-y-8 backdrop-blur-xl">
+        <div className="text-center">
+          <h1 className="text-4xl font-black tracking-tighter text-white flex items-center justify-center gap-1">
+            Task<span className="text-[#5468FF]">Flow</span>
+          </h1>
+          <p className="mt-3 text-slate-400 text-sm font-medium tracking-tight">
+            Collaborative project & task management
+          </p>
+        </div>
+
+        <div className="flex bg-[#0B0E14] p-1 rounded-xl border border-white/5">
+          <button 
+            onClick={() => setIsRegister(false)}
+            className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${!isRegister ? 'bg-[#5468FF] text-white' : 'text-slate-400 hover:text-slate-200'}`}
+          >
+            Sign In
+          </button>
+          <button 
+            onClick={() => setIsRegister(true)}
+            className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${isRegister ? 'bg-[#5468FF] text-white' : 'text-slate-400 hover:text-slate-200'}`}
+          >
+            Create Account
+          </button>
         </div>
         
         {error && (
-          <div className="bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 p-3 rounded-lg text-sm text-center border border-rose-100 dark:border-rose-800">
+          <div className="bg-rose-500/10 text-rose-400 p-3 rounded-xl text-xs font-medium text-center border border-rose-500/20">
             {error}
           </div>
         )}
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4 rounded-md shadow-sm">
+          <div className="space-y-5">
             {isRegister && (
               <div>
-                <label className="sr-only">Name</label>
+                <label className="block text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2 ml-1">Full Name</label>
                 <input
                   type="text"
                   required
-                  className="appearance-none relative block w-full px-3 py-2.5 border border-gray-300 dark:border-slate-600 placeholder-gray-500 dark:placeholder-slate-400 text-gray-900 dark:text-white bg-white dark:bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm transition-colors"
-                  placeholder="Full Name"
+                  className="block w-full px-4 py-3 border border-white/5 text-slate-100 bg-[#0B0E14] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5468FF]/50 placeholder-slate-600 sm:text-sm transition-all"
+                  placeholder="John Doe"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
               </div>
             )}
             <div>
-              <label className="sr-only">Email address</label>
+              <label className="block text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2 ml-1 text-white">Email</label>
               <input
                 type="email"
                 required
-                className="appearance-none relative block w-full px-3 py-2.5 border border-gray-300 dark:border-slate-600 placeholder-gray-500 dark:placeholder-slate-400 text-gray-900 dark:text-white bg-white dark:bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm transition-colors"
-                placeholder="Email address"
+                className="block w-full px-4 py-3 border border-white/5 text-slate-100 bg-[#0B0E14] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5468FF]/50 placeholder-slate-600 sm:text-sm transition-all"
+                placeholder="you@example.com"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
             </div>
             <div>
-              <label className="sr-only">Password</label>
+              <label className="block text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2 ml-1 text-white">Password</label>
               <input
                 type="password"
                 required
-                className="appearance-none relative block w-full px-3 py-2.5 border border-gray-300 dark:border-slate-600 placeholder-gray-500 dark:placeholder-slate-400 text-gray-900 dark:text-white bg-white dark:bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm transition-colors"
-                placeholder="Password"
+                className="block w-full px-4 py-3 border border-white/5 text-slate-100 bg-[#0B0E14] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5468FF]/50 placeholder-slate-600 sm:text-sm transition-all"
+                placeholder="••••••••"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               />
             </div>
           </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-70 disabled:cursor-not-allowed transition-all"
-            >
-              {loading ? (
-                <span className="animate-pulse">Please wait...</span>
-              ) : (
-                isRegister ? 'Sign up' : 'Sign in'
-              )}
-            </button>
-          </div>
-        </form>
-
-        <div className="text-center">
           <button
-            type="button"
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
-            onClick={() => {
-              setIsRegister(!isRegister);
-              setError('');
-            }}
+            type="submit"
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-2 py-3.5 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-[#5468FF] hover:bg-[#4353cc] focus:outline-none focus:ring-4 focus:ring-[#5468FF]/20 disabled:opacity-50 transition-all shadow-lg shadow-[#5468FF]/20"
           >
-            {isRegister ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
+            {loading ? 'Processing...' : (isRegister ? 'Create Account' : 'Sign In →')}
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );
