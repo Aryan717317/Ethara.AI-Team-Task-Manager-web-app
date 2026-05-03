@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../lib/api';
 import ProjectCard from '../components/ui/ProjectCard';
+import StatCard from '../components/ui/StatCard';
 import Modal from '../components/ui/Modal';
 import { FolderKanban, Plus } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
