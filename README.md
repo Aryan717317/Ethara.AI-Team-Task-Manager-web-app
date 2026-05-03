@@ -1,115 +1,123 @@
-# Taskify — Team Task Manager
+# 🚀 Taskify — Modern Team Task Manager
 
-A production-ready, full-stack team task management web app with role-based access control, project management, Kanban-style task boards, and role-aware dashboards.
+[![Railway Deployment](https://img.shields.io/badge/Deployed%20with-Railway-blueviolet?style=flat-square)](https://railway.app)
+[![Tech Stack](https://img.shields.io/badge/Stack-MERN-green?style=flat-square)](https://github.com/Aryan717317/Ethara.AI-Team-Task-Manager-web-app)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
-## Features
+**Taskify** is a high-performance, full-stack team collaboration platform designed for modern workflows. Built with the **MERN stack** (MongoDB, Express, React, Node.js), it provides a seamless interface for managing projects, tracking tasks with Kanban boards, and monitoring team productivity through role-aware dashboards.
 
-- **Authentication** — Register/Login with JWT, first user gets Admin role
-- **Role-Based Access Control** — Admin vs Member permissions enforced server & client side
-- **Project Management** — Create projects, add/remove members, track progress
-- **Task Management** — Full CRUD with priorities, due dates, assignees, status tracking
-- **Kanban Board** — Visual task board with Todo / In Progress / Done columns
-- **Dashboard** — Role-aware stats, overdue alerts, progress tracking
-- **Team Management** — Admin panel for user roles and team overview
+---
 
-## Tech Stack
+## ✨ Key Features
 
-### Backend
-| Layer | Technology |
-|-------|-----------|
-| Runtime | Node.js 20 |
-| Framework | Express.js |
-| Database | MongoDB (Mongoose ODM) |
-| Auth | JWT + bcrypt |
-| Validation | Zod |
-| Env config | dotenv |
+### 🏢 Project & Team Management
+- **Role-Based Access Control (RBAC):** Distinct permissions for **Admins** (full control) and **Members** (task-focused access).
+- **Team Workspace:** Centralized hub for managing user roles, project memberships, and team-wide productivity.
+- **Dynamic Project Stats:** Real-time calculation of project completion rates, overdue tasks, and workload distribution.
 
-### Frontend
-| Layer | Technology |
-|-------|-----------|
-| Framework | React 18 + Vite |
-| Styling | Tailwind CSS v3 |
-| HTTP | Axios (interceptors) |
-| Routing | React Router v6 |
-| State | React Context |
-| Notifications | react-hot-toast |
+### 📋 Task Lifecycle
+- **Kanban Boards:** Visualize progress with intuitive Drag-and-Drop style columns (To Do, In Progress, Done).
+- **Task Granularity:** Set priorities (High, Medium, Low), due dates, and assign specific team members to each task.
+- **Overdue Alerts:** Automatic highlighting of overdue tasks to ensure nothing falls through the cracks.
 
-## Local Development
+### 📊 Intelligence & UI
+- **Unified Dashboard:** Personalized view showing "My Tasks," active projects, and critical performance metrics.
+- **Modern Aesthetics:** Built with **Tailwind CSS** using a premium "Glassmorphism" aesthetic and smooth micro-animations.
+- **Responsive Design:** Fully optimized for Desktop, Tablet, and Mobile workflows.
+
+---
+
+## 🛠 Tech Stack
+
+| Component | Technology | Role |
+| :--- | :--- | :--- |
+| **Frontend** | React 18 + Vite | Lightning-fast UI development & HMR |
+| **Styling** | Tailwind CSS v3 | Utility-first responsive design |
+| **Backend** | Node.js + Express | Robust RESTful API architecture |
+| **Database** | MongoDB + Mongoose | Flexible document-based data modeling |
+| **Auth** | JWT + bcrypt | Secure password hashing & stateless sessions |
+| **Validation** | Zod | Schema-first request & response validation |
+
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 20+
-- MongoDB (local or Atlas)
+- [Node.js 20+](https://nodejs.org/)
+- [MongoDB](https://www.mongodb.com/try/download/community) (Local or Atlas)
 
-### Backend Setup
+### 1. Clone & Install
+```bash
+git clone https://github.com/Aryan717317/Ethara.AI-Team-Task-Manager-web-app.git
+cd Ethara.AI-Team-Task-Manager-web-app
+```
+
+### 2. Backend Setup
 ```bash
 cd backend
-cp .env.example .env
-# Edit .env with your MongoDB URI and JWT secret
 npm install
+cp .env.example .env
+# Update .env with your MONGODB_URI and JWT_SECRET
+npm run seed   # Create default admin: admin@taskify.com / password123
 npm run dev
 ```
 
-### Frontend Setup
+### 3. Frontend Setup
 ```bash
-cd frontend
-cp .env.example .env
+cd ../frontend
 npm install
+cp .env.example .env
+# Update VITE_API_URL to http://localhost:5000/api
 npm run dev
 ```
 
-Backend runs on `http://localhost:5000`, frontend on `http://localhost:5173`.
+---
 
-## Environment Variables
+## ☁️ Deployment Guide (Railway)
 
-### Backend
-| Variable | Description |
-|----------|-------------|
-| `MONGODB_URI` | MongoDB connection string |
-| `JWT_SECRET` | JWT signing secret (min 32 chars) |
-| `PORT` | Server port (default: 5000) |
-| `CLIENT_URL` | Frontend URL for CORS |
-| `NODE_ENV` | `development` or `production` |
+### 1. Database Provisioning
+In Railway, click **New** -> **Database** -> **Add MongoDB**. Copy the `MONGODB_URI`.
 
-### Frontend
-| Variable | Description |
-|----------|-------------|
-| `VITE_API_URL` | Backend API base URL |
+### 2. Backend Service
+- Add a new GitHub service pointing to your repo.
+- **Root Directory:** `/backend`
+- **Environment Variables:**
+  - `PORT`: `5000`
+  - `MONGODB_URI`: (Your Railway MongoDB URI)
+  - `JWT_SECRET`: (Generate a random string)
+  - `CLIENT_URL`: `https://your-frontend-domain.up.railway.app`
 
-## API Routes
+### 3. Frontend Service
+- Add another instance of the GitHub repo.
+- **Root Directory:** `/frontend`
+- **Environment Variables:**
+  - `VITE_API_URL`: `https://your-backend-domain.up.railway.app/api`
+- **Build Command:** `npm install && npm run build`
+- **Start Command:** `npx serve -s dist -l 3000`
 
-| Method | Path | Auth | Role | Description |
-|--------|------|------|------|-------------|
-| POST | `/api/auth/register` | — | — | Create account |
-| POST | `/api/auth/login` | — | — | Login |
-| GET | `/api/auth/me` | ✅ | Any | Get current user |
-| GET | `/api/projects` | ✅ | Any | List projects (scoped) |
-| POST | `/api/projects` | ✅ | Admin | Create project |
-| GET | `/api/projects/:id` | ✅ | Any | Get project + stats |
-| PATCH | `/api/projects/:id` | ✅ | Admin | Update project |
-| DELETE | `/api/projects/:id` | ✅ | Admin | Delete project |
-| POST | `/api/projects/:id/members` | ✅ | Admin | Add member |
-| DELETE | `/api/projects/:id/members/:userId` | ✅ | Admin | Remove member |
-| GET | `/api/tasks/my` | ✅ | Any | My assigned tasks |
-| GET | `/api/tasks/project/:projectId` | ✅ | Any | Tasks in project |
-| POST | `/api/tasks/project/:projectId` | ✅ | Admin | Create task |
-| PATCH | `/api/tasks/:id` | ✅ | Any | Update task |
-| DELETE | `/api/tasks/:id` | ✅ | Admin | Delete task |
-| GET | `/api/users` | ✅ | Admin | List all users |
-| PATCH | `/api/users/:id/role` | ✅ | Admin | Change user role |
-| GET | `/api/dashboard` | ✅ | Any | Dashboard stats |
+---
 
-## Deployment (Railway)
+## 🛡 API Architecture (RBAC)
 
-1. Push to GitHub
-2. Create Railway project with MongoDB Atlas
-3. Add backend service (root: `/backend`)
-4. Add frontend service (root: `/frontend`)
-5. Set environment variables on each service
+| Method | Endpoint | Auth | Access | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `POST` | `/auth/register` | 🔓 | Public | Join the platform |
+| `GET` | `/projects` | 🔒 | Member/Admin | View accessible projects |
+| `POST` | `/projects` | 🔒 | Admin | Create a new project |
+| `POST` | `/tasks` | 🔒 | Admin | Assign new team tasks |
+| `PATCH` | `/tasks/:id` | 🔒 | Assignee/Admin | Update task status |
+| `GET` | `/users` | 🔒 | Admin | Manage team directory |
 
-## Author
+---
 
-Aryan Bharat Kumar
+## 👤 Author
 
-## License
+**Aryan Bharat Kumar**
+- GitHub: [@Aryan717317](https://github.com/Aryan717317)
+- University Acc: 22BAI71264@cuchd.in
 
-MIT
+---
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
