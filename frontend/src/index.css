@@ -4,8 +4,15 @@
 
 @layer base {
   body {
-    @apply antialiased text-gray-900 bg-gray-50;
+    @apply antialiased text-slate-100 bg-[#0B0E14];
   }
+}
+
+:root {
+  --sidebar-bg: #151921;
+  --card-bg: #1A1F26;
+  --card-border: rgba(255, 255, 255, 0.08);
+  --accent-blue: #5468FF;
 }
 
 @layer utilities {
