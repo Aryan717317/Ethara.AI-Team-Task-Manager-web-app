@@ -31,85 +31,112 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0B0E14] py-12 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="max-w-md w-full bg-[#151921] rounded-2xl shadow-2xl border border-white/5 p-10 space-y-8 backdrop-blur-xl">
-        <div className="text-center">
-          <h1 className="text-4xl font-black tracking-tighter text-white flex items-center justify-center gap-1">
-            Task<span className="text-[#5468FF]">Flow</span>
-          </h1>
-          <p className="mt-3 text-slate-400 text-sm font-medium tracking-tight">
-            Collaborative project & task management
+    <div className="min-h-screen flex bg-[#0A0A0A] font-sans">
+      {/* Left Pane - Auth Form */}
+      <div className="flex-1 flex flex-col px-8 sm:px-16 md:px-24 py-12 justify-between z-10 bg-[#0A0A0A] max-w-xl xl:max-w-2xl">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 bg-[#E11D48] rotate-45"></div>
+          <h1 className="text-xl text-white font-serif tracking-tight">TaskForge</h1>
+        </div>
+
+        <div className="my-auto w-full max-w-sm">
+          <h2 className="text-5xl text-white font-serif mb-3 tracking-tight">
+            {isRegister ? 'Register' : 'Sign in'}
+          </h2>
+          <p className="text-[#A1A1AA] text-sm mb-10">
+            {isRegister ? 'Join the forge and start building.' : 'Pick up where you left off.'}
           </p>
-        </div>
 
-        <div className="flex bg-[#0B0E14] p-1 rounded-xl border border-white/5">
-          <button 
-            onClick={() => setIsRegister(false)}
-            className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${!isRegister ? 'bg-[#5468FF] text-white' : 'text-slate-400 hover:text-slate-200'}`}
-          >
-            Sign In
-          </button>
-          <button 
-            onClick={() => setIsRegister(true)}
-            className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${isRegister ? 'bg-[#5468FF] text-white' : 'text-slate-400 hover:text-slate-200'}`}
-          >
-            Create Account
-          </button>
-        </div>
-        
-        {error && (
-          <div className="bg-rose-500/10 text-rose-400 p-3 rounded-xl text-xs font-medium text-center border border-rose-500/20">
-            {error}
-          </div>
-        )}
+          {error && (
+            <div className="bg-[#E11D48]/10 text-[#E11D48] p-3 rounded text-xs mb-6 border border-[#E11D48]/20">
+              {error}
+            </div>
+          )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-5">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             {isRegister && (
-              <div>
-                <label className="block text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2 ml-1">Full Name</label>
+              <div className="space-y-2">
+                <label className="block text-[11px] font-mono text-[#A1A1AA] uppercase tracking-[0.1em]">Full Name</label>
                 <input
                   type="text"
                   required
-                  className="block w-full px-4 py-3 border border-white/5 text-slate-100 bg-[#0B0E14] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5468FF]/50 placeholder-slate-600 sm:text-sm transition-all"
-                  placeholder="John Doe"
+                  className="w-full bg-[#111111] border border-[#27272A] text-white px-4 py-3 focus:outline-none focus:border-[#E11D48] transition-colors"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
               </div>
             )}
-            <div>
-              <label className="block text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2 ml-1 text-white">Email</label>
+            <div className="space-y-2">
+              <label className="block text-[11px] font-mono text-[#A1A1AA] uppercase tracking-[0.1em]">Email</label>
               <input
                 type="email"
                 required
-                className="block w-full px-4 py-3 border border-white/5 text-slate-100 bg-[#0B0E14] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5468FF]/50 placeholder-slate-600 sm:text-sm transition-all"
-                placeholder="you@example.com"
+                className="w-full bg-[#111111] border border-[#27272A] text-white px-4 py-3 focus:outline-none focus:border-[#E11D48] transition-colors"
+                placeholder="admin@taskforge.io"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
             </div>
-            <div>
-              <label className="block text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2 ml-1 text-white">Password</label>
+            <div className="space-y-2">
+              <label className="block text-[11px] font-mono text-[#A1A1AA] uppercase tracking-[0.1em]">Password</label>
               <input
                 type="password"
                 required
-                className="block w-full px-4 py-3 border border-white/5 text-slate-100 bg-[#0B0E14] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5468FF]/50 placeholder-slate-600 sm:text-sm transition-all"
+                className="w-full bg-[#111111] border border-[#27272A] text-white px-4 py-3 focus:outline-none focus:border-[#E11D48] tracking-widest transition-colors"
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               />
             </div>
-          </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-2 py-3.5 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-[#5468FF] hover:bg-[#4353cc] focus:outline-none focus:ring-4 focus:ring-[#5468FF]/20 disabled:opacity-50 transition-all shadow-lg shadow-[#5468FF]/20"
-          >
-            {loading ? 'Processing...' : (isRegister ? 'Create Account' : 'Sign In →')}
-          </button>
-        </form>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#E11D48] hover:bg-[#BE123C] text-white py-3.5 text-sm transition-colors flex items-center justify-center gap-2 group disabled:opacity-50"
+            >
+              {loading ? 'Processing...' : (isRegister ? 'Create account →' : 'Sign in →')}
+            </button>
+          </form>
+
+          <p className="mt-8 text-[#A1A1AA] text-sm">
+            {isRegister ? 'Already have an account? ' : 'New here? '}
+            <button onClick={() => setIsRegister(!isRegister)} className="text-[#E11D48] hover:underline">
+              {isRegister ? 'Sign in' : 'Create an account'}
+            </button>
+          </p>
+
+          <hr className="my-8 border-[#27272A]" />
+
+          <div className="space-y-2">
+            <p className="text-[10px] font-mono text-[#A1A1AA] uppercase tracking-[0.1em]">Demo Credentials</p>
+            <div className="text-[11px] font-mono text-[#71717A] space-y-1">
+              <p>admin@taskforge.io / password123</p>
+              <p>member@taskforge.io / Member@12345</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Pane - Manifesto Graphic */}
+      <div className="hidden lg:flex flex-1 relative bg-gradient-to-br from-[#2A0B14] to-[#0A0A0A] p-24 items-center border-l border-[#27272A]">
+        {/* Subtle radial glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(225,29,72,0.05)_0%,transparent_70%)] pointer-events-none"></div>
+        
+        <div className="relative z-10 max-w-xl">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="h-[1px] w-4 bg-[#E11D48]"></div>
+            <span className="text-[#E11D48] text-[10px] font-mono uppercase tracking-[0.15em]">Manifesto</span>
+          </div>
+          
+          <h2 className="text-4xl xl:text-5xl font-serif text-white leading-tight mb-12">
+            "The best teams aren't the busiest.<br />
+            They're the ones who <span className="text-[#E11D48]">finish.</span>"
+          </h2>
+
+          <p className="text-[#71717A] text-[11px] font-mono uppercase tracking-[0.2em]">
+            TASKFORGE · VOLUME 01
+          </p>
+        </div>
       </div>
     </div>
   );
