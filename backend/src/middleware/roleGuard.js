@@ -1,2 +1,8 @@
-// Role guard middleware factory
-// Will be implemented in Phase 1
+const roleGuard = (...roles) => (req, res, next) => {
+  if (!roles.includes(req.user.role)) {
+    return res.status(403).json({ success: false, message: 'Access denied' });
+  }
+  next();
+};
+
+module.exports = roleGuard;
