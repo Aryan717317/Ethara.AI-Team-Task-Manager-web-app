@@ -1,0 +1,11 @@
+{
+  "name": "taskify-monorepo",
+  "version": "1.0.0",
+  "scripts": {
+    "postinstall": "npm run install:backend && npm run install:frontend",
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "build": "cd frontend && npm run build",
+    "start": "cd backend && node src/index.js"
+  }
+}

@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 
@@ -18,6 +19,15 @@ app.use('/api/projects',  require('./routes/projects'));
 app.use('/api/tasks',     require('./routes/tasks'));
 app.use('/api/users',     require('./routes/users'));
 app.use('/api/dashboard', require('./routes/dashboard'));
+
+// Serve Frontend in Production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+  });
+}
 
 app.use(errorHandler);
 
