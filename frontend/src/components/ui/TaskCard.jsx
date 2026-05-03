@@ -2,7 +2,7 @@ import Badge from './Badge';
 import { Calendar, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 
-const TaskCard = ({ task, onClick }) => {
+const TaskCard = ({ task, onClick, draggable, onDragStart }) => {
   const statusColors = {
     TODO: 'default',
     IN_PROGRESS: 'primary',
@@ -17,8 +17,10 @@ const TaskCard = ({ task, onClick }) => {
 
   return (
     <div 
+      draggable={draggable}
+      onDragStart={onDragStart}
       onClick={onClick}
-      className="bg-[#0B0E14] rounded-xl p-5 border border-white/5 shadow-sm hover:border-[#5468FF]/50 hover:shadow-[0_0_20px_rgba(84,104,255,0.1)] cursor-pointer transition-all"
+      className={`bg-[#0B0E14] rounded-xl p-5 border border-white/5 shadow-sm transition-all ${draggable ? 'cursor-grab active:cursor-grabbing hover:border-[#5468FF]/50 hover:shadow-[0_0_20px_rgba(84,104,255,0.1)]' : 'cursor-pointer'}`}
     >
       <div className="flex justify-between items-start gap-4 mb-3">
         <h4 className="font-bold text-white line-clamp-2">

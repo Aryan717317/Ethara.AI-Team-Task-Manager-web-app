@@ -28,6 +28,29 @@ const ProjectDetailsPage = () => {
     }
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = async (e, newStatus) => {
+    e.preventDefault();
+    const taskId = e.dataTransfer.getData('taskId');
+    if (!taskId) return;
+
+    // Optimistic update locally
+    setTasks(prevTasks => 
+      prevTasks.map(t => t._id === taskId ? { ...t, status: newStatus } : t)
+    );
+
+    try {
+      await api.patch(`/tasks/${taskId}`, { status: newStatus });
+    } catch (err) {
+      console.error('Failed to drop task updater', err);
+      // fallback completely sync state if it fails
+      fetchProjectDetails();
+    }
+  };
+
   useEffect(() => {
     fetchProjectDetails();
   }, [id]);
@@ -73,16 +96,26 @@ const ProjectDetailsPage = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {columns.map(col => (
-          <div key={col.id} className="bg-[#1A1F26]/50 backdrop-blur-xl rounded-2xl p-5 border border-white/5 shadow-xl">
+          <div 
+            key={col.id} 
+            className="flex flex-col bg-[#1A1F26]/50 backdrop-blur-xl rounded-2xl p-5 border border-white/5 shadow-xl min-h-[300px]"
+            onDragOver={handleDragOver}
+            onDrop={(e) => handleDrop(e, col.id)}
+          >
             <h3 className="font-black text-white mb-6 flex items-center justify-between tracking-wide">
               {col.title}
               <span className="bg-[#5468FF]/20 text-[#5468FF] py-1 px-3 rounded-full text-[10px] uppercase tracking-widest">
                 {tasks.filter(t => t.status === col.id).length}
               </span>
             </h3>
-            <div className="space-y-4">
+            <div className="flex-1 space-y-4">
               {tasks.filter(t => t.status === col.id).map(task => (
-                <TaskCard key={task._id} task={task} />
+                <TaskCard 
+                  key={task._id} 
+                  task={task} 
+                  draggable={true} 
+                  onDragStart={(e) => e.dataTransfer.setData('taskId', task._id)}
+                />
               ))}
             </div>
           </div>
