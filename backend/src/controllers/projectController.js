@@ -7,6 +7,7 @@ const projectSchema = z.object({
   name: z.string().min(2),
   description: z.string().optional(),
   color: z.string().optional(),
+  members: z.array(z.string()).optional(),
 });
 
 const getTaskStats = async (projectId) => {
@@ -21,10 +22,20 @@ const getTaskStats = async (projectId) => {
 exports.createProject = async (req, res, next) => {
   try {
     const body = projectSchema.parse(req.body);
+    
+    // Default members list includes the creator
+    let members = [req.user._id];
+    
+    // If the request contained specific members, add them
+    if (body.members && body.members.length > 0) {
+      const additionalMembers = body.members.filter(id => id !== req.user._id.toString());
+      members = [...members, ...additionalMembers];
+    }
+    
     const project = await Project.create({
       ...body,
       createdBy: req.user._id,
-      members: [req.user._id],
+      members: members,
     });
     res.status(201).json({ success: true, project });
   } catch (err) {

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../lib/api';
 import TaskCard from '../components/ui/TaskCard';
+import TaskForm from '../components/forms/TaskForm';
 import { useAuth } from '../hooks/useAuth';
 
 const ProjectDetailsPage = () => {
@@ -9,23 +10,25 @@ const ProjectDetailsPage = () => {
   const [project, setProject] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const { user } = useAuth();
 
+  const fetchProjectDetails = async () => {
+    try {
+      const [projectRes, tasksRes] = await Promise.all([
+        api.get(`/projects/${id}`),
+        api.get(`/tasks/project/${id}`)
+      ]);
+      setProject(projectRes.data.project);
+      setTasks(tasksRes.data.tasks);
+    } catch (err) {
+      console.error('Failed to fetch project details', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchProjectDetails = async () => {
-      try {
-        const [projectRes, tasksRes] = await Promise.all([
-          api.get(`/projects/${id}`),
-          api.get(`/tasks/project/${id}`)
-        ]);
-        setProject(projectRes.data.project);
-        setTasks(tasksRes.data.tasks);
-      } catch (err) {
-        console.error('Failed to fetch project details', err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchProjectDetails();
   }, [id]);
 
@@ -59,7 +62,10 @@ const ProjectDetailsPage = () => {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-gray-900 dark:text-white">Tasks</h2>
         {user?.role === 'ADMIN' && (
-          <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
+          <button 
+            onClick={() => setIsTaskModalOpen(true)}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm"
+          >
             Add Task
           </button>
         )}
@@ -82,6 +88,14 @@ const ProjectDetailsPage = () => {
           </div>
         ))}
       </div>
+
+      <TaskForm
+        isOpen={isTaskModalOpen}
+        onClose={() => setIsTaskModalOpen(false)}
+        projectId={id}
+        members={project.members}
+        onTaskAdded={fetchProjectDetails}
+      />
     </div>
   );
 };

@@ -8,25 +8,35 @@ import { useAuth } from '../hooks/useAuth';
 
 const ProjectPage = () => {
   const [projects, setProjects] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newProject, setNewProject] = useState({ name: '', description: '', color: '#5468FF' });
+  const [newProject, setNewProject] = useState({ name: '', description: '', color: '#5468FF', members: [] });
   const [submitting, setSubmitting] = useState(false);
-  const { user } = useAuth();
+  const { user: currentUser } = useAuth();
 
-  const fetchProjects = async () => {
+  const fetchProjectsAndUsers = async () => {
     try {
-      const res = await api.get('/projects');
-      setProjects(res.data.projects);
+      const promises = [api.get('/projects')];
+      if (currentUser?.role === 'ADMIN') {
+        promises.push(api.get('/users'));
+      }
+      
+      const results = await Promise.all(promises);
+      setProjects(results[0].data.projects);
+      
+      if (currentUser?.role === 'ADMIN' && results[1]) {
+        setUsers(results[1].data.users);
+      }
     } catch (err) {
-      console.error('Failed to fetch projects', err);
+      console.error('Failed to fetch data', err);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchProjects();
+    fetchProjectsAndUsers();
   }, []);
 
   const handleCreate = async (e) => {
@@ -35,13 +45,24 @@ const ProjectPage = () => {
     try {
       await api.post('/projects', newProject);
       setIsModalOpen(false);
-      setNewProject({ name: '', description: '', color: '#5468FF' });
-      fetchProjects();
+      setNewProject({ name: '', description: '', color: '#5468FF', members: [] });
+      fetchProjectsAndUsers();
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to create project');
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const toggleMember = (userId) => {
+    setNewProject(prev => {
+      const isSelected = prev.members.includes(userId);
+      if (isSelected) {
+        return { ...prev, members: prev.members.filter(id => id !== userId) };
+      } else {
+        return { ...prev, members: [...prev.members, userId] };
+      }
+    });
   };
 
   if (loading) return <div className="p-8 text-slate-500 font-bold uppercase tracking-widest animate-pulse">Loading projects...</div>;
@@ -52,7 +73,7 @@ const ProjectPage = () => {
         <div>
           <h1 className="text-3xl font-black text-white tracking-tight">Overview</h1>
         </div>
-        {user?.role === 'ADMIN' && (
+        {currentUser?.role === 'ADMIN' && (
           <button 
             onClick={() => setIsModalOpen(true)}
             className="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-4 py-2 rounded-xl font-bold flex items-center gap-2 transition-all"
@@ -117,6 +138,22 @@ const ProjectPage = () => {
               value={newProject.description}
               onChange={e => setNewProject({...newProject, description: e.target.value})}
             />
+          </div>
+          <div>
+            <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Assign Members</label>
+            <div className="max-h-32 overflow-y-auto space-y-1 bg-[#0B0E14] border border-white/5 rounded-xl p-2">
+              {users.filter(u => u._id !== currentUser?._id).map(user => (
+                <label key={user._id} className="flex items-center gap-3 p-2 hover:bg-white/5 rounded-lg cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 rounded border-white/10 bg-transparent text-[#5468FF] focus:ring-[#5468FF]/50"
+                    checked={newProject.members.includes(user._id)}
+                    onChange={() => toggleMember(user._id)}
+                  />
+                  <span className="text-sm font-bold text-white">{user.name}</span>
+                </label>
+              ))}
+            </div>
           </div>
           <button
             type="submit"

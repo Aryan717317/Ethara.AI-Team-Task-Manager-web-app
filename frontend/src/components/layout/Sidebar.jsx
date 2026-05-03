@@ -13,11 +13,11 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 bg-[#151921] border-r border-white/5 h-screen flex flex-col font-sans">
+    <aside className="w-64 bg-[#151921]/80 backdrop-blur-2xl border-r border-white/5 h-screen flex flex-col font-sans z-50">
       <div className="h-20 flex items-center px-6">
-        <h1 className="text-2xl font-black text-white flex items-center gap-1">
-          T <span className="text-lg font-bold">Taskly</span>
-          <span className="ml-auto bg-[#5468FF]/20 text-[#5468FF] text-[10px] px-2 py-0.5 rounded-full uppercase font-black tracking-widest">
+        <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#5468FF] to-[#00f2fe] flex items-center gap-1">
+          T <span className="text-lg font-bold text-white">Taskly</span>
+          <span className="ml-auto bg-[#5468FF]/20 text-[#5468FF] text-[10px] px-2 py-0.5 rounded-full uppercase font-black tracking-widest border border-[#5468FF]/30">
             {user?.role}
           </span>
         </h1>
