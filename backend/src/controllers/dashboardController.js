@@ -36,6 +36,11 @@ exports.getDashboard = async (req, res, next) => {
       .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
       .slice(0, 5);
 
+    const assignedToMeList = tasks
+      .filter(t => t.assignee && t.assignee._id.toString() === userId.toString() && t.status !== 'DONE')
+      .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+      .slice(0, 5);
+
     return res.json({
       success: true,
       stats: {
@@ -49,7 +54,8 @@ exports.getDashboard = async (req, res, next) => {
       },
       lists: {
         overdue: overdueList,
-        inProgress: inProgressList
+        inProgress: inProgressList,
+        assignedToMe: assignedToMeList
       }
     });
   } catch (err) { next(err); }

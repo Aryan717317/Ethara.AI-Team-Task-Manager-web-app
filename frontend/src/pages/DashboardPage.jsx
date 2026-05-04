@@ -102,6 +102,28 @@ const DashboardPage = () => {
           </div>
         )}
       </div>
+
+      {/* Assigned to me Section */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between border-b border-[#27272A] pb-4">
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl font-serif text-white">Assigned to me</h2>
+          </div>
+          <span className="text-[10px] font-mono text-[#71717A] uppercase tracking-[0.15em]">{lists.assignedToMe?.length || 0} ITEMS</span>
+        </div>
+
+        {lists.assignedToMe?.length > 0 ? (
+          <div className="border border-[#27272A] rounded-sm overflow-hidden bg-[#0A0A0A]">
+            {lists.assignedToMe.map((task) => (
+              <TaskRow key={task._id} task={task} />
+            ))}
+          </div>
+        ) : (
+          <div className="py-8 text-center border border-[#27272A] border-dashed rounded-sm">
+            <p className="text-[#71717A] text-sm">No tasks assigned to you right now.</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
