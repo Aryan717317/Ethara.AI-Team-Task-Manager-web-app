@@ -20,8 +20,8 @@ const Sidebar = () => {
   }
 
   return (
-    <aside className="w-56 lg:w-64 bg-[#0A0A0A] border-r border-[#27272A] h-screen flex flex-col font-sans z-50">
-      <div className="h-20 flex items-center px-6">
+    <aside className="shrink-0 w-56 lg:w-64 bg-[#0A0A0A] border-r border-[#27272A] h-screen flex flex-col font-sans z-50">
+      <div className="h-16 flex items-center px-6 border-b border-[#27272A]">
         <h1 className="text-xl text-white font-serif tracking-tight flex items-center gap-2">
           <div className="w-2.5 h-2.5 bg-[#E11D48] rotate-45"></div>
           TaskForge
