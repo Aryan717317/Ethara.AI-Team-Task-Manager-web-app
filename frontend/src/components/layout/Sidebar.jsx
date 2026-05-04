@@ -24,7 +24,7 @@ const Sidebar = () => {
       <div className="h-16 flex items-center px-6 border-b border-[#27272A]">
         <h1 className="text-xl text-white font-serif tracking-tight flex items-center gap-2">
           <div className="w-2.5 h-2.5 bg-[#E11D48] rotate-45"></div>
-          TaskForge
+          Taskify
         </h1>
       </div>
 
