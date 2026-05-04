@@ -4,58 +4,32 @@ const User = require('../models/User');
 
 exports.getDashboard = async (req, res, next) => {
   try {
-    if (req.user.role === 'ADMIN') {
-      const [totalProjects, totalMembers, tasks] = await Promise.all([
-        Project.countDocuments(),
-        User.countDocuments(),
-        Task.find(),
-      ]);
+    const tasksQuery = req.user.role === 'ADMIN' ? {} : { assignee: req.user._id };
+    const allTasks = await Task.find(tasksQuery).populate('project', 'name color').populate('assignee', 'name');
 
-      const tasksByStatus = {
-        TODO: tasks.filter(t => t.status === 'TODO').length,
-        IN_PROGRESS: tasks.filter(t => t.status === 'IN_PROGRESS').length,
-        DONE: tasks.filter(t => t.status === 'DONE').length,
-      };
-      const overdueTasks = tasks.filter(t => t.isOverdue).length;
+    const totalProjects = await Project.countDocuments();
+    const myTasksCount = await Task.countDocuments({ assignee: req.user._id });
 
-      const recentProjects = await Project.find()
-        .sort({ createdAt: -1 })
-        .limit(4)
-        .populate('members', 'name');
+    const overdueList = allTasks.filter(t => t.isOverdue && t.status !== 'DONE');
+    const inProgressList = allTasks.filter(t => t.status === 'IN_PROGRESS');
+    const todoList = allTasks.filter(t => t.status === 'TODO' && !t.isOverdue);
+    const doneList = allTasks.filter(t => t.status === 'DONE');
 
-      const projectsWithStats = await Promise.all(recentProjects.map(async (p) => {
-        const ptasks = await Task.find({ project: p._id });
-        const total = ptasks.length;
-        const done = ptasks.filter(t => t.status === 'DONE').length;
-        const overdueCount = ptasks.filter(t => t.isOverdue).length;
-        return { ...p.toObject(), stats: { total, done, overdue: overdueCount } };
-      }));
-
-      return res.json({
-        success: true,
-        totalProjects,
-        totalMembers,
-        totalTasks: tasks.length,
-        tasksByStatus,
-        overdueTasks,
-        recentProjects: projectsWithStats,
-      });
-    }
-
-    // Member view
-    const myTasks = await Task.find({ assignee: req.user._id }).populate('project', 'name color');
-    const done = myTasks.filter(t => t.status === 'DONE').length;
-    const inProgress = myTasks.filter(t => t.status === 'IN_PROGRESS').length;
-    const overdue = myTasks.filter(t => t.isOverdue).length;
-    const upcoming = myTasks
-      .filter(t => t.dueDate && t.status !== 'DONE' && new Date(t.dueDate) >= new Date())
-      .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
-      .slice(0, 5);
+    const stats = {
+      projects: totalProjects,
+      todo: todoList.length,
+      inProgress: inProgressList.length,
+      done: doneList.length,
+      overdue: overdueList.length,
+      assignedToMe: myTasksCount
+    };
 
     res.json({
       success: true,
-      myTasks: { total: myTasks.length, done, inProgress, overdue },
-      upcomingDeadlines: upcoming,
+      stats,
+      overdueList,
+      inProgressList,
+      todoList
     });
   } catch (err) { next(err); }
 };

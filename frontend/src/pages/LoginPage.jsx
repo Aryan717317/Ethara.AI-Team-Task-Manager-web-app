@@ -36,7 +36,7 @@ const LoginPage = () => {
       <div className="flex-1 flex flex-col px-8 sm:px-16 md:px-24 py-12 justify-between z-10 bg-[#0A0A0A] max-w-xl xl:max-w-2xl">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 bg-[#E11D48] rotate-45"></div>
-          <h1 className="text-xl text-white font-serif tracking-tight">TaskForge</h1>
+          <h1 className="text-xl text-white font-serif tracking-tight">Taskify</h1>
         </div>
 
         <div className="my-auto w-full max-w-sm">
@@ -72,7 +72,7 @@ const LoginPage = () => {
                 type="email"
                 required
                 className="w-full bg-[#111111] border border-[#27272A] text-white px-4 py-3 focus:outline-none focus:border-[#E11D48] transition-colors"
-                placeholder="admin@taskforge.io"
+                placeholder="admin@taskify.io"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
@@ -110,8 +110,8 @@ const LoginPage = () => {
           <div className="space-y-2">
             <p className="text-[10px] font-mono text-[#A1A1AA] uppercase tracking-[0.1em]">Demo Credentials</p>
             <div className="text-[11px] font-mono text-[#71717A] space-y-1">
-              <p>admin@taskforge.io / password123</p>
-              <p>member@taskforge.io / Member@12345</p>
+              <p>admin@taskify.io / password123</p>
+              <p>member@taskify.io / Member@12345</p>
             </div>
           </div>
         </div>
@@ -134,7 +134,7 @@ const LoginPage = () => {
           </h2>
 
           <p className="text-[#71717A] text-[11px] font-mono uppercase tracking-[0.2em]">
-            TASKFORGE · VOLUME 01
+            TASKIFY · VOLUME 01
           </p>
         </div>
       </div>
