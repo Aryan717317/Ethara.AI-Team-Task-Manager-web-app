@@ -126,6 +126,7 @@ const DashboardPage = () => {
         <div className="py-20 text-center border border-[#27272A] bg-[#0A0A0A] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#111111] to-[#0A0A0A]">
           <p className="text-[11px] font-mono text-[#71717A] uppercase tracking-[0.2em]">All cleared. Nothing actively pending.</p>
         </div>
+      )}
     </div>
   );
 };
