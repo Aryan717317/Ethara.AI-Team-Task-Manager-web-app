@@ -4,32 +4,53 @@ const User = require('../models/User');
 
 exports.getDashboard = async (req, res, next) => {
   try {
-    const tasksQuery = req.user.role === 'ADMIN' ? {} : { assignee: req.user._id };
-    const allTasks = await Task.find(tasksQuery).populate('project', 'name color').populate('assignee', 'name');
+    const userId = req.user._id;
+    const role = req.user.role;
 
-    const totalProjects = await Project.countDocuments();
-    const myTasksCount = await Task.countDocuments({ assignee: req.user._id });
+    let tasksQuery = {};
+    if (role !== 'ADMIN') {
+      tasksQuery = { assignee: userId };
+    }
 
-    const overdueList = allTasks.filter(t => t.isOverdue && t.status !== 'DONE');
-    const inProgressList = allTasks.filter(t => t.status === 'IN_PROGRESS');
-    const todoList = allTasks.filter(t => t.status === 'TODO' && !t.isOverdue);
-    const doneList = allTasks.filter(t => t.status === 'DONE');
+    const tasks = await Task.find(tasksQuery).populate('project', 'name color').populate('assignee', 'name email');
 
-    const stats = {
-      projects: totalProjects,
-      todo: todoList.length,
-      inProgress: inProgressList.length,
-      done: doneList.length,
-      overdue: overdueList.length,
-      assignedToMe: myTasksCount
+    const totalProjects = await Project.countDocuments(role === 'ADMIN' ? {} : { members: userId });
+    const totalMembers = role === 'ADMIN' ? await User.countDocuments() : 0;
+
+    const tasksByStatus = {
+      TODO: tasks.filter(t => t.status === 'TODO').length,
+      IN_PROGRESS: tasks.filter(t => t.status === 'IN_PROGRESS').length,
+      DONE: tasks.filter(t => t.status === 'DONE').length,
     };
+    
+    const overdueCount = tasks.filter(t => t.isOverdue).length;
+    const myAssignedCount = tasks.filter(t => t.assignee && t.assignee._id.toString() === userId.toString()).length;
 
-    res.json({
+    const overdueList = tasks
+      .filter(t => t.isOverdue && t.status !== 'DONE')
+      .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+      .slice(0, 5);
+
+    const inProgressList = tasks
+      .filter(t => t.status === 'IN_PROGRESS')
+      .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+      .slice(0, 5);
+
+    return res.json({
       success: true,
-      stats,
-      overdueList,
-      inProgressList,
-      todoList
+      stats: {
+        totalProjects,
+        totalMembers,
+        todo: tasksByStatus.TODO,
+        inProgress: tasksByStatus.IN_PROGRESS,
+        done: tasksByStatus.DONE,
+        overdue: overdueCount,
+        assignedToMe: myAssignedCount
+      },
+      lists: {
+        overdue: overdueList,
+        inProgress: inProgressList
+      }
     });
   } catch (err) { next(err); }
 };
